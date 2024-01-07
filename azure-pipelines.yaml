@@ -28,7 +28,7 @@ steps:
     regionName: 'us-east-1'
     scriptType: 'inline'
     inlineScript: |
-      echo "Hello World!!!"
+      git diff-tree --no-commit-id --name-only -r $(Build.SourceVersion)
       files=$(git diff-tree --no-commit-id --name-only -r $(Build.SourceVersion))
 
       for file in $files; do
