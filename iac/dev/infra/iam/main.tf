@@ -20,7 +20,7 @@ provider "aws" {
 }
 
 resource "aws_iam_policy" "gh_actions_assume_role_policy" {
-  name = "ado-policy-dev-01"
+  name = "ado-policy-dev-02"
   path = "/"
   description = "Policy for GH Actions Assume Role"
   policy = jsonencode({
@@ -36,7 +36,7 @@ resource "aws_iam_policy" "gh_actions_assume_role_policy" {
 }
 
 resource "aws_iam_role" "gh_actions_assume_role" {
-  name = "ado-dev-role-01"
+  name = "ado-dev-role-02"
   managed_policy_arns = [aws_iam_policy.gh_actions_assume_role_policy.arn]
   assume_role_policy = jsonencode(
     {
