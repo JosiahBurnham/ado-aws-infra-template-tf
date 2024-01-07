@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: 
+  branches:
+    include:
+      - master
+  
+  paths:
+    include:
+      - iac/dev/infra/*
+
+pool:
+  vmImage: ubuntu-latest
+
+
+steps:
+- task: TerraformInstaller@2
+  inputs:
+    terraformVersion: 'latest'
+
+
+- task: AWSShellScript@1
+  inputs:
+    awsCredentials: 'AWS Dev Account'
+    regionName: 'us-east-1'
+    scriptType: 'inline'
+    inlineScript: |
+      files=$(git diff-tree --no-commit-id --name-only -r $(Build.SourceVersion))
+
+      for file in $files; do
+        filename=`basename $file`
+            if [[ "$file" != 'none' && "$filename" == 'main.tf' ]]
+            then
+              DIR="$(dirname "${file}")"
+              PLANFILENAME=`echo $DIR | tr / _`
+              terraform -chdir=$DIR init
+              terraform -chdir=$DIR plan -out=/tmp/tfplan/$PLANFILENAME.tfplan -no-color
+              terraform -chdir=$DIR apply -auto-approve /tmp/tfplan/$PLANFILENAME.tfplan
+            fi
+      done
+      
