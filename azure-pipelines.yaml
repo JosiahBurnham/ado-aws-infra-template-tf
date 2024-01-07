@@ -28,8 +28,8 @@ steps:
     regionName: 'us-east-1'
     scriptType: 'inline'
     inlineScript: |
-      git diff-tree --no-commit-id --name-only -r $(Build.SourceVersion)
-      files=$(git diff-tree --no-commit-id --name-only -r $(Build.SourceVersion))
+      git diff --name-only @~ @
+      files=$(git git diff --name-only @~ @)
 
       for file in $files; do
         filename=`basename $file`
