@@ -28,8 +28,11 @@ steps:
     regionName: 'us-east-1'
     scriptType: 'inline'
     inlineScript: |
+      ls
+      git status
+      echo "_____________"
       git diff --name-only HEAD~ HEAD
-      files=$(git diff --name-only HEAD~ HEAD
+      files=$(git diff --name-only HEAD~ HEAD)
 
       for file in $files; do
         filename=`basename $file`
